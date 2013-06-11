@@ -26,5 +26,7 @@ namespace EPiGlue.DataAnnotations
         public string EditTag { get; set; }
 
         public string EditCssClass { get; set; }
+
+        public string CssClass { get; set; }
     }
 }

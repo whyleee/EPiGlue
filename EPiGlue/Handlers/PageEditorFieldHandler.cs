@@ -18,18 +18,38 @@ namespace EPiGlue.Handlers
     {
         public virtual bool CanHandle(ModelPropertyContext context)
         {
-            return IsInEditMode(context.ExecutionContext.RequestContext) &&
-                   context.Property.PropertyType.Is<IHtmlString>() &&
-                   context.Property.PropertyType != typeof(ContentArea) && // TODO: let's skip content areas for now
-                   !context.Model.GetType().Has<EditIgnoreAttribute>() &&
-                   !context.Property.Has<EditIgnoreAttribute>();
+            return IsInEditMode(context) && FilterByType(context) && FilterIgnored(context) && FilterByValue(context);
         }
 
         public abstract void Process(ModelPropertyContext context);
 
-        // TODO: something generic, move out of here
-        private bool IsInEditMode(RequestContext requestContext)
+        protected virtual bool FilterIgnored(ModelPropertyContext context)
         {
+            return !context.Model.GetType().Has<EditIgnoreAttribute>() && !context.Property.Has<EditIgnoreAttribute>();
+        }
+
+        protected virtual bool FilterByType(ModelPropertyContext context)
+        {
+            return context.Property.PropertyType.Is<IHtmlString>() &&
+                   context.Property.PropertyType != typeof (ContentArea); // TODO: let's skip content areas for now
+        }
+
+        protected virtual bool FilterByValue(ModelPropertyContext context)
+        {
+            return true;
+        }
+
+        protected virtual void SetValue(object value, ModelPropertyContext context)
+        {
+            context.PropertyValue = value;
+            context.Property.SetValue(context.Model, context.PropertyValue);
+        }
+
+        // TODO: something generic, move out of here
+        protected virtual bool IsInEditMode(ModelPropertyContext context)
+        {
+            var requestContext = context.ExecutionContext.RequestContext;
+
             object contextMode;
             if (requestContext.RouteData.DataTokens.TryGetValue("contextmode", out contextMode))
             {

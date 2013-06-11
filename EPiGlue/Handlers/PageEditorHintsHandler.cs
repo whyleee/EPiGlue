@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using EPiGlue.DataAnnotations;
 using EPiGlue.Framework;
 using EPiServer.Web.Mvc;
 using Perks;
@@ -14,13 +15,18 @@ namespace EPiGlue.Handlers
     {
         public override bool CanHandle(ModelPropertyContext context)
         {
-            return base.CanHandle(context) && context.PropertyValue == null && !IsInBlockPreviewMode(context);
+            return base.CanHandle(context) && !IsInBlockPreviewMode(context);
+        }
+
+        protected override bool FilterByValue(ModelPropertyContext context)
+        {
+            return context.PropertyValue == null;
         }
 
         public override void Process(ModelPropertyContext context)
         {
             var editName = GetFieldEditName(context);
-            var editHint = GetFieldEditHint(editName);
+            var editHint = GetFieldEditHint(editName, context);
             var fieldType = context.Property.PropertyType;
 
             if (fieldType.Is<IEditHtmlString>())
@@ -28,11 +34,11 @@ namespace EPiGlue.Handlers
                 var fieldValue = Activator.CreateInstance(fieldType);
                 ((IEditHtmlString) fieldValue).DefaultValue = editHint;
 
-                context.PropertyValue = fieldValue;
+                SetValue(fieldValue, context);
             }
             else if (fieldType == typeof (IHtmlString))
             {
-                context.PropertyValue = editHint;
+                SetValue(editHint, context);
             }
             else
             {
@@ -40,9 +46,14 @@ namespace EPiGlue.Handlers
             }
         }
 
-        private IHtmlString GetFieldEditHint(string editName)
+        private IHtmlString GetFieldEditHint(string editName, ModelPropertyContext context)
         {
-            return new HtmlString("[" + editName.ToFriendlyString() + "]");
+            var editHint = context.Property.Get<EditHintAttribute>() ?? new EditHintAttribute();
+            var cssClassAttr = editHint.CssClass.IfNotNullOrEmpty(css => string.Format(" class=\"{0}\"", css));
+
+            var html = string.Format("<span{0}>[{1}]</span>", cssClassAttr, editName.ToFriendlyString());
+
+            return new HtmlString(html);
         }
 
         private bool IsInBlockPreviewMode(ModelPropertyContext context)
