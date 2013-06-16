@@ -148,11 +148,12 @@
     <Compile Include="DataAnnotations\EditHintNoPrefixAttribute.cs" />
     <Compile Include="DataAnnotations\EditHintPrefixAttribute.cs" />
     <Compile Include="DataAnnotations\EditIgnoreAttribute.cs" />
+    <Compile Include="EditableCollection.cs" />
     <Compile Include="IEditHtmlString.cs" />
     <Compile Include="Handlers\PageEditorFieldHandler.cs" />
     <Compile Include="Handlers\PageEditorHtmlHandler.cs" />
     <Compile Include="Handlers\PageEditorHintsHandler.cs" />
-    <Compile Include="PageEditorHtmlString.cs" />
+    <Compile Include="EditableHtmlString.cs" />
     <Compile Include="Framework\IModelProcessor.cs" />
     <Compile Include="Framework\IModelPropertyHandler.cs" />
     <Compile Include="Framework\ModelPropertyContext.cs" />

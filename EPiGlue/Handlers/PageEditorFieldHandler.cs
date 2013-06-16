@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,7 +22,19 @@ namespace EPiGlue.Handlers
             return IsInEditMode(context) && FilterByType(context) && FilterIgnored(context) && FilterByValue(context);
         }
 
-        public abstract void Process(ModelPropertyContext context);
+        public virtual void Process(ModelPropertyContext context)
+        {
+            if (context.Property.PropertyType.Is<IEnumerable>())
+            {
+                if (context.PropertyValue == null || !context.PropertyValue.GetType().Is(typeof (EditableCollection<>)))
+                {
+                    var itemType = context.Property.PropertyType.GetCollectionItemType();
+                    var collectionTemplate = typeof (EditableCollection<>).MakeGenericType(itemType);
+
+                    context.PropertyValue = Activator.CreateInstance(collectionTemplate, context.PropertyValue);
+                }
+            }
+        }
 
         protected virtual bool FilterIgnored(ModelPropertyContext context)
         {
@@ -30,8 +43,10 @@ namespace EPiGlue.Handlers
 
         protected virtual bool FilterByType(ModelPropertyContext context)
         {
-            return context.Property.PropertyType.Is<IHtmlString>() &&
-                   context.Property.PropertyType != typeof (ContentArea); // TODO: let's skip content areas for now
+            return (context.Property.PropertyType.Is<IHtmlString>() &&
+                    context.Property.PropertyType != typeof (ContentArea)) || // TODO: let's skip content areas for now
+                    context.Property.PropertyType.GetCollectionItemType().IfNotNull(t => t.Is<IHtmlString>()) ||
+                   (context.PropertyValue != null && context.PropertyValue.GetType().Is(typeof (EditableCollection<>)));
         }
 
         protected virtual bool FilterByValue(ModelPropertyContext context)
@@ -57,6 +72,26 @@ namespace EPiGlue.Handlers
             }
 
             return PageEditing.PageIsInEditMode;
+        }
+
+        protected virtual string GetFieldEditName(ModelPropertyContext context)
+        {
+            var field = context.Property;
+            var editNameHint = field.Get<EditHintAttribute>().IfNotNull(x => x.EditName);
+
+            if (editNameHint.IsNotNullOrEmpty())
+            {
+                return editNameHint;
+            }
+
+            if (field.Has<EditHintNoPrefixAttribute>())
+            {
+                return field.Name;
+            }
+
+            var editPrefix = context.Model.GetType().Get<EditHintPrefixAttribute>().IfNotNull(x => x.EditPrefix);
+
+            return editPrefix + field.Name;
         }
     }
 }

@@ -11,7 +11,7 @@ using Perks;
 
 namespace EPiGlue.Handlers
 {
-    public class PageEditorHintsHandler : PageEditorHtmlHandler
+    public class PageEditorHintsHandler : PageEditorFieldHandler
     {
         public override bool CanHandle(ModelPropertyContext context)
         {
@@ -25,6 +25,8 @@ namespace EPiGlue.Handlers
 
         public override void Process(ModelPropertyContext context)
         {
+            base.Process(context);
+
             var editName = GetFieldEditName(context);
             var editHint = GetFieldEditHint(editName, context);
             var fieldType = context.Property.PropertyType;

@@ -6,9 +6,9 @@ using Perks;
 
 namespace EPiGlue
 {
-    public class PageEditorHtmlString : IEditHtmlString
+    public class EditableHtmlString : IEditHtmlString
     {
-        public PageEditorHtmlString(IHtmlString fieldHtml)
+        public EditableHtmlString(IHtmlString fieldHtml)
         {
             FieldHtml = fieldHtml;
         }

@@ -21,13 +21,15 @@ namespace EPiGlue.Handlers
     {
         public override void Process(ModelPropertyContext context)
         {
+            base.Process(context);
+
             var fieldHtml = InsertPageEditorMarkup(context, (IHtmlString) context.PropertyValue);
             SetValue(fieldHtml, context); // TODO: we could have an exception here (different types of property and setting value)
         }
 
         private IHtmlString InsertPageEditorMarkup(ModelPropertyContext context, IHtmlString fieldHtml)
         {
-            var editHtml = fieldHtml is IEditHtmlString ? (IEditHtmlString) fieldHtml : new PageEditorHtmlString(fieldHtml);
+            var editHtml = fieldHtml is IEditHtmlString ? (IEditHtmlString) fieldHtml : new EditableHtmlString(fieldHtml);
             var htmlBuilder = new StringBuilder();
             var editHint = context.Property.Get<EditHintAttribute>() ?? new EditHintAttribute();
 
@@ -42,12 +44,12 @@ namespace EPiGlue.Handlers
                     writer: writer))
                 {
                     Func<string> renderSettingsWriter = null;
-
-                    if (editHint.CssClass.IsNotNullOrEmpty())
-                    {
-                        var renderSettings = new RouteValueDictionary(new {CssClass = editHint.CssClass});
-                        renderSettingsWriter = () => AttrsWriter(renderSettings, PageEditing.DataEPiPropertyRenderSettings);
-                    }
+                    var renderSettings = new RouteValueDictionary(new
+                        {
+                            CssClass = editHint.CssClass,
+                            ChildrenCssClass = editHint.ChildrenCssClass
+                        });
+                    renderSettingsWriter = () => AttrsWriter(renderSettings, PageEditing.DataEPiPropertyRenderSettings);
 
                     editContainer.CreateStartElementForEditMode(renderSettingsWriter);
                     editHtml.EditorStart = new HtmlString(writer.ToString());
@@ -58,26 +60,6 @@ namespace EPiGlue.Handlers
             }
 
             return editHtml;
-        }
-
-        protected virtual string GetFieldEditName(ModelPropertyContext context)
-        {
-            var field = context.Property;
-            var editNameHint = field.Get<EditHintAttribute>().IfNotNull(x => x.EditName);
-
-            if (editNameHint.IsNotNullOrEmpty())
-            {
-                return editNameHint;
-            }
-
-            if (field.Has<EditHintNoPrefixAttribute>())
-            {
-                return field.Name;
-            }
-
-            var editPrefix = context.Model.GetType().Get<EditHintPrefixAttribute>().IfNotNull(x => x.EditPrefix);
-
-            return editPrefix + field.Name;
         }
 
         private static string AttrsWriter(RouteValueDictionary routeValues, string attributeName)
