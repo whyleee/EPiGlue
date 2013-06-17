@@ -44,11 +44,17 @@ namespace EPiGlue.Handlers
                     writer: writer))
                 {
                     Func<string> renderSettingsWriter = null;
-                    var renderSettings = new RouteValueDictionary(new
-                        {
-                            CssClass = editHint.CssClass,
-                            ChildrenCssClass = editHint.ChildrenCssClass
-                        });
+                    var renderSettings = new RouteValueDictionary();
+                    
+                    if (editHint.CssClass.IsNotNullOrEmpty())
+                    {
+                        renderSettings.Add("CssClass", editHint.CssClass);
+                    }
+                    if (editHint.ChildrenCssClass.IsNotNullOrEmpty())
+                    {
+                        renderSettings.Add("ChildrenCssClass", editHint.ChildrenCssClass);
+                    }
+
                     renderSettingsWriter = () => AttrsWriter(renderSettings, PageEditing.DataEPiPropertyRenderSettings);
 
                     editContainer.CreateStartElementForEditMode(renderSettingsWriter);

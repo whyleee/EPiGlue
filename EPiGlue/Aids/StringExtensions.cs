@@ -14,5 +14,10 @@ namespace EPiGlue
         {
             return htmlString.IfNotNull(x => x.ToHtmlString());
         }
+
+        public static IHtmlString ToHtml(this object value)
+        {
+            return new HtmlString(value.IfNotNull(x => x.ToString()));
+        }
     }
 }

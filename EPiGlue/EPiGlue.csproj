@@ -149,6 +149,8 @@
     <Compile Include="DataAnnotations\EditHintPrefixAttribute.cs" />
     <Compile Include="DataAnnotations\EditIgnoreAttribute.cs" />
     <Compile Include="EditableCollection.cs" />
+    <Compile Include="HtmlExtensions.cs" />
+    <Compile Include="ICustomizable.cs" />
     <Compile Include="IEditHtmlString.cs" />
     <Compile Include="Handlers\PageEditorFieldHandler.cs" />
     <Compile Include="Handlers\PageEditorHtmlHandler.cs" />
@@ -157,6 +159,7 @@
     <Compile Include="Framework\IModelProcessor.cs" />
     <Compile Include="Framework\IModelPropertyHandler.cs" />
     <Compile Include="Framework\ModelPropertyContext.cs" />
+    <Compile Include="Initializer.cs" />
     <Compile Include="ModelProcessorAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Framework\PropertyHandlerChainModelProcessor.cs" />
