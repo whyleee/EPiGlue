@@ -131,6 +131,7 @@
       <HintPath>..\packages\Perks.1.3.1\lib\net45\Perks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -149,6 +150,10 @@
     <Compile Include="DataAnnotations\EditHintPrefixAttribute.cs" />
     <Compile Include="DataAnnotations\EditIgnoreAttribute.cs" />
     <Compile Include="EditableCollection.cs" />
+    <Compile Include="Handlers\StringFriendlyUrlRewriter.cs" />
+    <Compile Include="Helpers\FriendlyUrlRewriter.cs" />
+    <Compile Include="Handlers\HtmlStringFriendlyUrlRewriter.cs" />
+    <Compile Include="Helpers\HtmlStringActivator.cs" />
     <Compile Include="HtmlExtensions.cs" />
     <Compile Include="ICustomizable.cs" />
     <Compile Include="IEditHtmlString.cs" />

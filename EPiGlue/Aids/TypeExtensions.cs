@@ -17,6 +17,13 @@ namespace EPiGlue
             return member.Get<TAttribute>() != null;
         }
 
+        public static bool Has<TAttribute>(this MemberInfo member, Func<TAttribute, bool> with) where TAttribute : Attribute
+        {
+            var attr = member.Get<TAttribute>();
+
+            return attr != null && with(attr);
+        }
+
         public static TAttribute Get<TAttribute>(this Type type) where TAttribute : Attribute
         {
             return type.GetCustomAttribute<TAttribute>();
