@@ -11,24 +11,24 @@ namespace EPiGlue.Helpers
 {
     internal static class HtmlStringActivator
     {
-        public static IHtmlString CreateInstance(PropertyInfo property, string value)
+        public static IHtmlString CreateInstance(Type type, string value)
         {
-            if (property.PropertyType.IsNot<IHtmlString>())
+            if (type.IsNot<IHtmlString>())
             {
                 return null;
             }
 
-            if (property.PropertyType == typeof(IHtmlString))
+            if (type == typeof(IHtmlString))
             {
                 return new HtmlString(value);
             }
 
-            if (property.PropertyType.IsAbstract || property.PropertyType.IsInterface)
+            if (type.IsAbstract || type.IsInterface)
             {
                 return null; // Can't create instance
             }
 
-            return (IHtmlString) Activator.CreateInstance(property.PropertyType, new object[] {value});
+            return (IHtmlString) Activator.CreateInstance(type, new object[] {value});
         }
     }
 }

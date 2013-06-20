@@ -24,7 +24,7 @@ namespace EPiGlue.Handlers
             base.Process(context);
 
             var fieldHtml = InsertPageEditorMarkup(context, (IHtmlString) context.PropertyValue);
-            SetValue(fieldHtml, context); // TODO: we could have an exception here (different types of property and setting value)
+            context.PropertyValue = fieldHtml; // TODO: we could have an exception here (different types of property and setting value)
         }
 
         private IHtmlString InsertPageEditorMarkup(ModelPropertyContext context, IHtmlString fieldHtml)

@@ -54,12 +54,6 @@ namespace EPiGlue.Handlers
             return true;
         }
 
-        protected virtual void SetValue(object value, ModelPropertyContext context)
-        {
-            context.PropertyValue = value;
-            context.Property.SetValue(context.Model, context.PropertyValue);
-        }
-
         // TODO: something generic, move out of here
         protected virtual bool IsInEditMode(ModelPropertyContext context)
         {

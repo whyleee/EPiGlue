@@ -36,11 +36,11 @@ namespace EPiGlue.Handlers
                 var fieldValue = Activator.CreateInstance(fieldType);
                 ((IEditHtmlString) fieldValue).DefaultValue = editHint;
 
-                SetValue(fieldValue, context);
+                context.PropertyValue = fieldValue;
             }
             else if (fieldType == typeof (IHtmlString))
             {
-                SetValue(editHint, context);
+                context.PropertyValue = editHint;
             }
             else
             {

@@ -151,6 +151,7 @@
     <Compile Include="DataAnnotations\EditIgnoreAttribute.cs" />
     <Compile Include="EditableCollection.cs" />
     <Compile Include="Handlers\StringFriendlyUrlRewriter.cs" />
+    <Compile Include="Handlers\XhtmlStringHandler.cs" />
     <Compile Include="Helpers\FriendlyUrlRewriter.cs" />
     <Compile Include="Handlers\HtmlStringFriendlyUrlRewriter.cs" />
     <Compile Include="Helpers\HtmlStringActivator.cs" />

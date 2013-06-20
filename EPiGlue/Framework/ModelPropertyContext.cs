@@ -12,7 +12,16 @@ namespace EPiGlue.Framework
 
         public PropertyInfo Property { get; set; }
 
-        public object PropertyValue { get; set; }
+        private object _propertyValue;
+        public object PropertyValue
+        {
+            get { return _propertyValue; }
+            set
+            {
+                _propertyValue = value;
+                Property.SetValue(Model, value);
+            }
+        }
 
         public ResultExecutingContext ExecutionContext { get; set; }
 

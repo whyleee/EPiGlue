@@ -26,7 +26,7 @@ namespace EPiGlue.Handlers
 
         public virtual bool CanHandle(ModelPropertyContext context)
         {
-            return context.Property.PropertyType.Is<IHtmlString>() &&
+            return context.PropertyValue is IHtmlString &&
                    context.Property.Has<UIHintAttribute>(with: x => x.UIHint == UIHint.Document);
         }
 
@@ -34,7 +34,8 @@ namespace EPiGlue.Handlers
         {
             var url = ((IHtmlString) context.PropertyValue).IfNotNull(x => x.ToHtmlString());
             var friendlyUrl = _urlRewriter.GetFriendlyUrl(url, context.ExecutionContext.RequestContext, RouteTable.Routes);
-            context.PropertyValue = HtmlStringActivator.CreateInstance(context.Property, friendlyUrl);
+
+            context.PropertyValue = HtmlStringActivator.CreateInstance(context.Property.PropertyType, friendlyUrl);
         }
     }
 }
