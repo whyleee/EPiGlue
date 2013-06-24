@@ -18,7 +18,7 @@ namespace EPiGlue
     {
         private static Func<HtmlHelper, string> _defaultObjectTemplate;
 
-        public void Initialize(InitializationEngine context)
+        public virtual void Initialize(InitializationEngine context)
         {
             RegisterHtmlStringAwareObjectTemplate();
         }
@@ -65,11 +65,11 @@ namespace EPiGlue
             return _defaultObjectTemplate(html);
         }
 
-        public void Uninitialize(InitializationEngine context)
+        public virtual void Uninitialize(InitializationEngine context)
         {
         }
 
-        public void Preload(string[] parameters)
+        public virtual void Preload(string[] parameters)
         {
         }
     }
