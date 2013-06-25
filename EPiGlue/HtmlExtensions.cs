@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using EPiServer.Web.Mvc.Html;
+using Perks.Mvc;
 
 namespace EPiGlue
 {
@@ -31,11 +32,6 @@ namespace EPiGlue
         public static IHtmlString For<TValue>(this HtmlHelper html, TValue value, object @params = null)
         {
             SetParams(value, @params);
-
-            if (value is IHtmlString)
-            {
-                return (IHtmlString) value;
-            }
 
             return value.ToHtml();
         }
