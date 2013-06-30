@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Routing;
 using EPiGlue.DataAnnotations;
 using EPiGlue.Framework;
 using EPiServer.Core;
 using EPiServer.Editor;
+using EPiServer.Framework.DataAnnotations;
+using EPiServer.Framework.Web;
 using EPiServer.Web;
 using Perks;
 
@@ -57,15 +58,50 @@ namespace EPiGlue.Handlers
         // TODO: something generic, move out of here
         protected virtual bool IsInEditMode(ModelPropertyContext context)
         {
+            var editMode = false;
+            var modeDetected = false;
             var requestContext = context.ExecutionContext.RequestContext;
 
             object contextMode;
             if (requestContext.RouteData.DataTokens.TryGetValue("contextmode", out contextMode))
             {
-                return (ContextMode) contextMode == ContextMode.Edit;
+                editMode = (ContextMode) contextMode == ContextMode.Edit;
+                modeDetected = true;
             }
 
-            return PageEditing.PageIsInEditMode;
+            if (!modeDetected)
+            {
+                editMode = PageEditing.PageIsInEditMode;
+            }
+
+            // skip processing for block previews to render them in ordinary view mode
+            if (editMode && IsInBlockPreviewMode(context))
+            {
+                return false;
+            }
+
+            return editMode;
+        }
+
+        private bool IsInBlockPreviewMode(ModelPropertyContext context)
+        {
+            if (!context.Model.GetType().Name.EndsWith("BlockModel"))
+            {
+                return false;
+            }
+
+            var parentViewContext = context.ExecutionContext.ParentActionViewContext;
+
+            if (parentViewContext == null)
+            {
+                return false;
+            }
+
+            var controllerType = parentViewContext.Controller.GetType();
+
+            return !controllerType.Has<TemplateDescriptorAttribute>(
+                with: attr => attr.Tags.Contains(RenderingTags.Preview)
+            );
         }
 
         protected virtual string GetFieldEditName(ModelPropertyContext context)
