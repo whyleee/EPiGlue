@@ -2,17 +2,12 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
     <metadata>
         <id>EPiGlue</id>
-        <version>0.5-beta</version>
+        <version>0.5.1-beta</version>
         <authors>Pavel Nezhencev</authors>
         <projectUrl>https://github.com/whyleee/EPiGlue</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Unobtrusive EPiServer 7 page editor support for ASP.NET MVC applications, friendly URLs and extendable API for custom model processors.</description>
-        <releaseNotes>- Model processing framework
-- Basic page editor support
-- Support for links, images and collections
-- Edit hint attributes
-- Friendly URL rewriting
-- Personalization, dynamic content and friendly URLs support in XHTML string properties</releaseNotes>
+        <releaseNotes>- Fixed block previews</releaseNotes>
         <tags>EPiServer page edit editor unobtrusive ASP.NET MVC view model processors</tags>
         <dependencies>
             <dependency id="EPiServer.CMS.Core" version="7.0.586.1" />
