@@ -80,7 +80,7 @@ namespace EPiGlue.Framework
         {
             foreach (var property in model.GetType().GetProperties())
             {
-                var propertyValue = property.GetValue(model);
+                var propertyValue = property.GetValue(model, null);
 
                 if (!ProcessModel(propertyValue))
                 {

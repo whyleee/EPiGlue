@@ -19,7 +19,7 @@ namespace EPiGlue.Framework
             set
             {
                 _propertyValue = value;
-                Property.SetValue(Model, value);
+                Property.SetValue(Model, value, null);
             }
         }
 
